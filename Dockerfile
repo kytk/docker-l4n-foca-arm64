@@ -37,10 +37,10 @@ RUN apt-get install -y git at-spi2-core bc byobu curl wget dc \
  software-properties-common fonts-noto mupdf mupdf-tools pigz \
  ristretto pinta firefox libreoffice libreoffice-l10n-ja
  
-# Install Google-chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt install -y ./google-chrome-stable_current_amd64.deb
-RUN rm google-chrome-stable_current_amd64.deb
+## Install Google-chrome
+#RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+#RUN apt install -y ./google-chrome-stable_current_amd64.deb
+#RUN rm google-chrome-stable_current_amd64.deb
 
 
 # Japanese environment 
