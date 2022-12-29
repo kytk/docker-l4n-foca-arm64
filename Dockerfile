@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 ## General
 # Change default sh from Dash to Bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+#RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # XFCE
 RUN apt-get update && \
@@ -24,32 +24,27 @@ RUN apt-get install -y pkg-config libopenblas-dev liblapack-dev    \
     libhdf5-serial-dev graphviz python3-pip python3-venv python3-dev python3-tk
 
 # Install utilities
-#RUN apt-get install -y git at-spi2-core bc byobu curl wget dc \
-# default-jre evince exfat-fuse exfat-utils gedit  \
-# gnome-system-monitor gnome-system-tools gparted  \
-# imagemagick rename ntp system-config-printer-gnome  \
-# tree unzip update-manager vim alsa-base \
-# wajig xfce4-screenshooter zip ntp tcsh baobab xterm     \
-# bleachbit libopenblas-base cups apturl dmz-cursor-theme \
-# chntpw gddrescue p7zip-full gnupg eog meld libjpeg62 \
-# software-properties-common fonts-noto mupdf mupdf-tools pigz \
-# ristretto pinta firefox libreoffice libreoffice-l10n-ja
- 
-RUN apt-get install -y git at-spi2-core bc curl wget dc \
+RUN apt-get install -y git at-spi2-core bc byobu curl wget dc \
  default-jre evince exfat-fuse exfat-utils gedit  \
  gnome-system-monitor gnome-system-tools gparted  \
  imagemagick rename ntp system-config-printer-gnome  \
- tree unzip update-manager vim \
- xfce4-screenshooter zip tcsh xterm     \
- libopenblas-base cups apturl dmz-cursor-theme \
- p7zip-full gnupg eog meld \
- software-properties-common pigz \
- pinta firefox 
+ tree unzip update-manager vim alsa-base \
+ wajig xfce4-screenshooter zip ntp tcsh baobab xterm     \
+ bleachbit libopenblas-base cups apturl dmz-cursor-theme \
+ chntpw gddrescue p7zip-full gnupg eog meld libjpeg62 \
+ software-properties-common fonts-noto mupdf mupdf-tools pigz \
+ ristretto pinta firefox libreoffice libreoffice-l10n-ja
+ 
+# Install Google-chrome
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt install -y ./google-chrome-stable_current_amd64.deb
+RUN rm google-chrome-stable_current_amd64.deb
 
-## Install Google-chrome
-#RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-#RUN apt install -y ./google-chrome-stable_current_amd64.deb
-#RUN rm google-chrome-stable_current_amd64.deb
+
+## Japanese environment 
+#RUN apt-get install -y language-pack-ja manpages-ja \
+#    fcitx fcitx-mozc fcitx-config-gtk \
+#    nkf firefox-locale-ja im-config 
 
 
 ##### Lin4Neuro #####
@@ -84,16 +79,16 @@ RUN echo "alias open='xdg-open &> /dev/null'" >> /etc/skel/.bash_aliases
 # DCMTK
 RUN apt-get install -y dcmtk
 
-## Talairach Daemon
-#RUN cp -r ${parts}/tdaemon /usr/local && \
-#    echo '' >> /etc/skel/.bash_aliases && \
-#    echo '#tdaemon' >> /etc/skel/.bash_aliases && \
-#    echo "alias tdaemon='java -jar /usr/local/tdaemon/talairach.jar'" >> /etc/skel/.bash_aliases
+# Talairach Daemon
+RUN cp -r ${parts}/tdaemon /usr/local && \
+    echo '' >> /etc/skel/.bash_aliases && \
+    echo '#tdaemon' >> /etc/skel/.bash_aliases && \
+    echo "alias tdaemon='java -jar /usr/local/tdaemon/talairach.jar'" >> /etc/skel/.bash_aliases
 
-## VirtualMRI
-#RUN cd /usr/local && \
-#    wget http://www.lin4neuro.net/lin4neuro/neuroimaging_software_packages/vmri.zip && \
-#    unzip vmri.zip && rm vmri.zip
+# VirtualMRI
+RUN cd /usr/local && \
+    wget http://www.lin4neuro.net/lin4neuro/neuroimaging_software_packages/vmri.zip && \
+    unzip vmri.zip && rm vmri.zip
 
 # Mango
 RUN cd /usr/local && \
@@ -111,51 +106,52 @@ RUN cd /usr/local &&  \
     echo 'export PATH=$PATH:/usr/local/MRIcroGL' >> /etc/skel/.bash_aliases && \
     echo 'export PATH=$PATH:/usr/local/MRIcroGL/Resources' >> /etc/skel/.bash_aliases
 
-## MRIcron
-#RUN cd /usr/local && wget http://www.lin4neuro.net/lin4neuro/neuroimaging_software_packages/MRIcron_linux.zip && \
-#    unzip MRIcron_linux.zip && rm MRIcron_linux.zip && \
-#    cd mricron && \
-#    find . -name 'dcm2niix' -exec rm {} \; && \
-#    find . -name '*.bat' -exec rm {} \; && \
-#    find . -type d -exec chmod 755 {} \; && \
-#    find Resources -type f -exec chmod 644 {} \; && \
-#    chmod 755 /usr/local/mricron/Resources/pigz_mricron && \
-#    echo '' >> /etc/skel/.bash_aliases && \
-#    echo '#MRIcron' >> /etc/skel/.bash_aliases && \
-#    echo 'export PATH=$PATH:/usr/local/mricron' >> /etc/skel/.bash_aliases
+# MRIcron
+RUN cd /usr/local && wget http://www.lin4neuro.net/lin4neuro/neuroimaging_software_packages/MRIcron_linux.zip && \
+    unzip MRIcron_linux.zip && rm MRIcron_linux.zip && \
+    cd mricron && \
+    find . -name 'dcm2niix' -exec rm {} \; && \
+    find . -name '*.bat' -exec rm {} \; && \
+    find . -type d -exec chmod 755 {} \; && \
+    find Resources -type f -exec chmod 644 {} \; && \
+    chmod 755 /usr/local/mricron/Resources/pigz_mricron && \
+    echo '' >> /etc/skel/.bash_aliases && \
+    echo '#MRIcron' >> /etc/skel/.bash_aliases && \
+    echo 'export PATH=$PATH:/usr/local/mricron' >> /etc/skel/.bash_aliases
 
-## Surf-Ice
-#RUN cd /usr/local && wget http://www.lin4neuro.net/lin4neuro/neuroimaging_software_packages/surfice_linux.zip && \
-#    unzip surfice_linux.zip && rm surfice_linux.zip && \
-#    cd Surf_Ice && \
-#    find . -type d -exec chmod 755 {} \; && \
-#    find . -type f -exec chmod 644 {} \; && \
-#    chmod 755 surfice* && \
-#    chmod 644 surfice_Linux_Installation.txt && \
-#    echo '' >> /etc/skel/.bash_aliases && \
-#    echo '#Surf_Ice' >> /etc/skel/.bash_aliases && \
-#    echo 'export PATH=$PATH:/usr/local/Surf_Ice' >> /etc/skel/.bash_aliases
+# Surf-Ice
+RUN cd /usr/local && wget http://www.lin4neuro.net/lin4neuro/neuroimaging_software_packages/surfice_linux.zip && \
+    unzip surfice_linux.zip && rm surfice_linux.zip && \
+    cd Surf_Ice && \
+    find . -type d -exec chmod 755 {} \; && \
+    find . -type f -exec chmod 644 {} \; && \
+    chmod 755 surfice* && \
+    chmod 644 surfice_Linux_Installation.txt && \
+    echo '' >> /etc/skel/.bash_aliases && \
+    echo '#Surf_Ice' >> /etc/skel/.bash_aliases && \
+    echo 'export PATH=$PATH:/usr/local/Surf_Ice' >> /etc/skel/.bash_aliases
 
-## FSL 6.0.6.1
-#RUN cd /usr/local && wget http://www.lin4neuro.net/lin4neuro/neuroimaging_software_packages/fsl-6.0.6.1.tar.gz && \
-#    tar xvzf fsl-6.0.6.1.tar.gz && rm fsl-6.0.6.1.tar.gz && \
-#    echo '' >> /etc/skel/.profile && \
-#    echo '# FSL Setup' >> /etc/skel/.profile && \
-#    echo 'FSLDIR=/usr/local/fsl' >> /etc/skel/.profile && \
-#    echo 'PATH=${FSLDIR}/share/fsl/bin:${PATH}' >> /etc/skel/.profile && \
-#    echo 'export FSLDIR PATH' >> /etc/skel/.profile && \
-#    echo '. ${FSLDIR}/etc/fslconf/fsl.sh' >> /etc/skel/.profile
+# FSL 6.0.6.1
+RUN cd /usr/local && wget http://www.lin4neuro.net/lin4neuro/neuroimaging_software_packages/fsl-6.0.6.1.tar.gz && \
+    tar xvzf fsl-6.0.6.1.tar.gz && rm fsl-6.0.6.1.tar.gz && \
+    echo '' >> /etc/skel/.profile && \
+    echo '# FSL Setup' >> /etc/skel/.profile && \
+    echo 'FSLDIR=/usr/local/fsl' >> /etc/skel/.profile && \
+    echo 'PATH=${FSLDIR}/share/fsl/bin:${PATH}' >> /etc/skel/.profile && \
+    echo 'export FSLDIR PATH' >> /etc/skel/.profile && \
+    echo '. ${FSLDIR}/etc/fslconf/fsl.sh' >> /etc/skel/.profile
 
 
 
 # Change login shell to bash
-#RUN chsh -s /bin/bash
+RUN chsh -s /bin/bash
 ##### Lin4Neuro settings end #####
 
 
-# TigerVNC and nonVNC
-RUN apt-get install -y tigervnc-standalone-server tigervnc-common \
-    novnc websockify
+# TigghtVNC and nonVNC
+RUN apt-get install -y tightvncserver novnc websockify
+RUN apt-get install ufw
+RUN ufw allow 5900 && ufw allow 5901
 
 ARG UID=1000
 RUN useradd -m -u ${UID} brain && echo "brain:lin4neuro" | chpasswd && adduser brain sudo
@@ -163,6 +159,10 @@ RUN useradd -m -u ${UID} brain && echo "brain:lin4neuro" | chpasswd && adduser b
 USER brain
 
 ENV SHELL=/bin/bash
+ENV QT4_IM_MODULE=fcitx
+ENV QT_IM_MODULE=fcitx
+ENV XMODIFIERS=@im=fcitx
+ENV GTK_IM_MODULE=fcitx
 
 COPY vncsettings.sh /home/brain
-
+COPY jpsettings.sh /home/brain
